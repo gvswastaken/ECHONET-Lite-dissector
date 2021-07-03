@@ -14,6 +14,8 @@
 --
 local nodeprofile = require("group-0x0e-node-profile")
 local openclosesensor = require("group-0x00-open-close")
+local storagebattery = require("group-0x02-storage-battery")
+local solarpower = require("group-0x02-solar-power")
 
 -- ========================================================
 -- ECHONET Lite epc parser
@@ -25,8 +27,18 @@ local function epcparser(classgroup, class, epc, pdc, edt, tree, edata)
         do return end
     end
     if classgroup:uint() == 0x00 then -- sensor class
-        if class:uint() == 0x29 then -- open/close sensor
-            openclosesensor(classgroup, class, epc, pdc, edt, tree, edata)
+		if class:uint() == 0x29 then -- open/close sensor
+			openclosesensor(classgroup, class, epc, pdc, edt, tree, edata)
+			do return end
+		end
+	end
+	if classgroup:uint() == 0x02 then -- housing/facilities class
+        if class:uint() == 0x7d then -- storage battery
+            storagebattery(classgroup, class, epc, pdc, edt, tree, edata)
+            do return end
+        end
+        if class:uint() == 0x79 then -- solar power generation
+            solarpower(classgroup, class, epc, pdc, edt, tree, edata)
             do return end
         end
     end
